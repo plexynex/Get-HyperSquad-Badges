@@ -212,4 +212,31 @@ Mau ke **Balance**? Pake `house_id: 3`!
 
 > Script ini menggunakan modul internal Discord yang bisa berubah kapan aja. Kalau suatu saat error, berarti Discord udah update dan butuh penyesuaian.
 
+# 🎖️ 3 Arti Badges Hypesquad Discord
+
+---
+
+## 🔵 **Bravery** (Keberanian)
+- Untuk member yang **berani** dan **aktif** di komunitas
+- Suka ngobrol, berani ngomong, ikut acara Discord
+- Warna: **Biru**
+
+---
+
+## 🟡 **Brilliance** (Kecerdasan)
+- Untuk member yang **kreatif**, **pintar**, dan suka **berbagi ilmu**
+- Sering bikin konten keren, ngerjain quest, atau aktif di event
+- Warna: **Kuning**
+
+---
+
+## 🟢 **Balance** (Keseimbangan)
+- Untuk member yang **membantu orang lain** dan **menjaga kedamaian**
+- Sering bantu jawab pertanyaan, moderasi, atau jembatan antar anggota
+- Warna: **Hijau**
+
+---
+
+> 💡 **Catatan:** Kamu cuma bisa pilih **satu** dari ketiganya. Kalau mau ganti, harus keluar dulu dari yang sekarang!
+
 Enjoy switching Hypesquad tanpa ribet! 🔥
