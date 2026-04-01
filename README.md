@@ -1,6 +1,6 @@
-# 🎮 Discord Hypesquad Switcher
+# 🎮 Discord Hypesquad Switcher / Get new badges tag
 
-Hai! Ini adalah dua script sederhana buat kalian yang mau ganti-ganti **Hypesquad** di Discord secara instant. Gak perlu buka-buka pengaturan, langsung jalan di console browser!
+Hai! Ini adalah dua script sederhana buat kalian yang mau ganti-ganti / yang baru mau dapetin **Hypesquad** di Discord secara instant. Bahkan ketika eventnya sudah habis, langsung jalan di console browser!
 
 ---
 
