@@ -1,6 +1,6 @@
 # 🎮 Discord Hypesquad Switcher / Get new badges tag
 
-Hai! Ini adalah dua script sederhana buat kalian yang mau ganti-ganti / yang baru mau dapetin **Hypesquad** di Discord secara instant. Bahkan ketika eventnya sudah habis, langsung jalan di console browser! [By [plexynex](https://github.com/plexynex) <span style="color📗;">plexynex</span> Dev]
+Hai! Ini adalah dua script sederhana buat kalian yang mau ganti-ganti / yang baru mau dapetin **Hypesquad** di Discord secara instant. Bahkan ketika eventnya sudah habis, langsung jalan di console browser! # <a href="https://github.com/plexynex" style="color:blue;">plexynex</a>
 
 ---
 
